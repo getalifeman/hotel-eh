@@ -6,7 +6,14 @@
 
 int r1=0,i1=0;
 
-////// function to create borders ///////////
+//////// function to produce delay ////////
+
+void delay()
+{
+ for(long l=0;l<=9599999999;++l);
+}
+
+//////// function to create borders ////////
 
 void box(int x, int y, int l, int b, char ch)
 {
@@ -44,21 +51,17 @@ class guest
  long tel_no;
  char room_type;
  public:
+
  guest()
  {
 	charges=0.0;
 	total_charge=0.0;
  }
- void display()	 //can be used as checkout or printbill function
- {
-  cout<<"ID number:"<<id_no;
-  cout<<"\nName:"<<name;
-  cout<<"\nAddress:"<<address;
-  cout<<"\nTelephone number:"<<tel_no;
-  cout<<"\nRoom number:"<<room_no;
-  cout<<"\nTotal charge:"<<total_charge;
-  cout<<"\nRoom Type:"<<room_type<<endl;
- }
+
+ void checkin(); //prototype for getting details function
+
+ void diplay(); // prototype for display function
+
  int getroomno()
  {
   return room_no;
@@ -71,7 +74,7 @@ class guest
  {
   return id_no;
  }
- void checkin();
+
  void putcharges()
 {
  cout<<"Enter the total charge\n";       //include sum of all charges
@@ -79,7 +82,7 @@ class guest
 }
 };
 
-//function for checking existing room numbers and id numbers
+//////// function for checking existing room numbers and id numbers ////////
 
 void checkroidno(int r, int i)
 {
@@ -105,27 +108,56 @@ void checkroidno(int r, int i)
  fin.close();
 }
 
-/////// get details of customer /////////
+//////// display details of customer ////////
 
-
- void guest::checkin()
+ void guest :: display()
  {
-  cout<<"Name of customer\n";
+  clrscr();
+  box(0,0,80,26,'*');
+  box(14,5,69,22,'+');
+  gotoxy(15,7);
+  cout<<"ID number:"<<id_no;
+  gotoxy(15,9);
+  cout<<"Name:"<<name;
+  gotoxy(15,11);
+  cout<<"Address:"<<address;
+  gotoxy(15,13);
+  cout<<"Telephone number:"<<tel_no;
+  gotoxy(15,15);
+  cout<<"Room number:"<<room_no;
+  gotoxy(15,17);
+  cout<<"Total charge:"<<total_charge;
+  gotoxy(15,19);
+  cout<<"Room Type:"<<room_type<<endl;
+ }
+
+//////// get details of customer ////////
+
+
+ void guest :: checkin()
+ {
+  gotoxy(12,3);
+  cout<<"Name of customer:";
   gets(name);
-  cout<<"Address of customer\n";
+  gotoxy(12,5);
+  cout<<"Address of customer:";
   gets(address);
-  cout<<"Telephone number\n";
+  gotoxy(12,7);
+  cout<<"Telephone number:";
   cin>>tel_no;
-  cout<<"Allocate room type as\n";
+  gotoxy(12,9);
+  cout<<"Allocate room type as:";
   cin>>room_type;
-  cout<<"Assign room number as\n";
+  gotoxy(12,11);
+  cout<<"Assign room number as:";
   cin>>room_no;
-  cout<<"Assign ID number as\n";
+  gotoxy(12,13);
+  cout<<"Assign ID number as:";
   cin>>id_no;
   checkroidno(room_no,id_no);
  }
 
- ////////// function to check number of specific rooms available /////////
+//////// function to check number of specific rooms available ////////
 
 void checkrooms()
 {
@@ -142,29 +174,45 @@ void checkrooms()
   else
   --s;
  }
-fin.close();
-cout<<e<<" enconomy rooms available\n";
-cout<<l<<" luxury rooms available\n";
-cout<<s<<" suites available\n";
-}
-void append()
-{
- checkrooms();
- guest G;
- G.checkin();
- if(r1==0||i1==0)
- {
- ofstream fout;
- fout.open("guest.dat",ios::app|ios::binary);
- fout.write((char*)&G,sizeof(G));
- cout<<"Done!\n";
- fout.close();
- }
- else
-  cout<<"Room number or ID number already assigned.. Try Again\n";
+ fin.close();
+ gotoxy(29,5);
+ cout<<e<<" economy rooms available\n";
+ gotoxy(29,7);
+ cout<<l<<" luxury rooms available\n";
+ gotoxy(29,9);
+ cout<<s<<" suites available\n";
 }
 
-///////// search function with idno and roomno ////////
+//////// function to add records ////////
+
+void append()
+{
+ box(0,0,80,26,'*');
+ checkrooms();
+ gotoxy(10,11);
+ cout<<"Book record?.. press any key to continue or backspace to go back";
+ char ch=getch();
+ if(ch!=8)
+ {
+  clrscr();
+  box(0,0,80,26,'*');
+  guest G;
+  G.checkin();
+  if(r1==0||i1==0)
+  {
+	ofstream fout;
+	fout.open("guest.dat",ios::app|ios::binary);
+	fout.write((char*)&G,sizeof(G));
+	fout.close();
+  }
+  else
+	cout<<"Room number or ID number already assigned.. Try Again\n";
+	delay();
+ }
+ return;
+}
+
+//////// search function with idno and roomno ////////
 
 void search()
 {
@@ -195,8 +243,7 @@ void search()
 	fin.open("guest.dat",ios::in|ios::binary);
 	int ino;
 	gotoxy(24,8);
-	cout<<"Enter the ID number you want to search";
-	gotoxy(24,9);
+	cout<<"Enter the ID number you want to search:";
 	cin>>ino;
 	while(fin.read((char*)&g,sizeof(g)))
 	{
@@ -204,15 +251,19 @@ void search()
 	  g.display();
 	}
 	fin.close();
-   cout<<"Press any key to go back\n";
+	cout<<"Press any key to go back\n";
 	getch();
 	goto next;
  }
  else if(opt=='2')
  {
+	clrscr();
+	box(0,0,80,26,'*');
+	box(14,5,69,22,'+');
 	fin.open("guest.dat",ios::in|ios::binary);
 	int rno;
-	cout<<"Enter the room number number you want to search\n";
+	gotoxy(18,8);
+	cout<<"Enter the room number number you want to search:";
 	cin>>rno;
 	while(fin.read((char*)&g,sizeof(g)))
 	{
@@ -220,13 +271,16 @@ void search()
 	 g.display();
 	}
 	fin.close();
+	cout<<"Press any key to go back\n";
+	getch();
+	goto next;
  }
 
  else if(opt==8)
  return;
 }
 
-//////// main menu function starts //////////
+//////// main menu function starts ////////
 
  void menu()
 {
@@ -274,15 +328,15 @@ void search()
 	case '4':
 			 break;
 	case '5':
-				exit(0);
-				break;
+			exit(0);
+			break;
 	default:clrscr();
 			 break;
   }
  goto start;
 }
 
-// void main() start //
+//////// execution start point /////////
 
 void main()
 {
