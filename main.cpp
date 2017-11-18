@@ -1,10 +1,12 @@
+// header files required
+
 #include<fstream.h>
 #include<stdio.h>
 #include<string.h>
 #include<stdlib.h>
 #include<conio.h>
 
-int r1=0,i1=0;
+int r1=0,i1=0; //global variables
 
 //////// function to produce delay ////////
 
@@ -60,7 +62,28 @@ class guest
 
  void checkin(); //prototype for getting details function
 
- void diplay(); // prototype for display function
+ //////// display details of customer ////////
+
+ void display()
+ {
+  clrscr();
+  box(0,0,80,26,'*');
+  box(14,5,69,22,'+');
+  gotoxy(15,7);
+  cout<<"ID number:"<<id_no;
+  gotoxy(15,9);
+  cout<<"Name:"<<name;
+  gotoxy(15,11);
+  cout<<"Address:"<<address;
+  gotoxy(15,13);
+  cout<<"Telephone number:"<<tel_no;
+  gotoxy(15,15);
+  cout<<"Room number:"<<room_no;
+  gotoxy(15,17);
+  cout<<"Total charge:"<<total_charge;
+  gotoxy(15,19);
+  cout<<"Room Type:"<<room_type<<endl;
+ }
 
  int getroomno()
  {
@@ -107,29 +130,6 @@ void checkroidno(int r, int i)
  }
  fin.close();
 }
-
-//////// display details of customer ////////
-
- void guest :: display()
- {
-  clrscr();
-  box(0,0,80,26,'*');
-  box(14,5,69,22,'+');
-  gotoxy(15,7);
-  cout<<"ID number:"<<id_no;
-  gotoxy(15,9);
-  cout<<"Name:"<<name;
-  gotoxy(15,11);
-  cout<<"Address:"<<address;
-  gotoxy(15,13);
-  cout<<"Telephone number:"<<tel_no;
-  gotoxy(15,15);
-  cout<<"Room number:"<<room_no;
-  gotoxy(15,17);
-  cout<<"Total charge:"<<total_charge;
-  gotoxy(15,19);
-  cout<<"Room Type:"<<room_type<<endl;
- }
 
 //////// get details of customer ////////
 
@@ -251,7 +251,8 @@ void search()
 	  g.display();
 	}
 	fin.close();
-	cout<<"Press any key to go back\n";
+	gotoxy(40,20);
+	cout<<"Press any key to go back";
 	getch();
 	goto next;
  }
@@ -271,7 +272,8 @@ void search()
 	 g.display();
 	}
 	fin.close();
-	cout<<"Press any key to go back\n";
+	gotoxy(40,20);
+	cout<<"Press any key to go back";
 	getch();
 	goto next;
  }
@@ -327,11 +329,16 @@ void search()
 			 break;
 	case '4':
 			 break;
-	case '5':
-			exit(0);
-			break;
+	case '5':{
+		  clrscr();
+		  box(0,0,80,26,'*');
+		  gotoxy(27,12);
+		  cout<<"Thank You for using the program!";
+		  exit(0);
+		  break;
+	         }
 	default:clrscr();
-			 break;
+	        break;
   }
  goto start;
 }
