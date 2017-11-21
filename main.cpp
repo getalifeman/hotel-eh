@@ -14,7 +14,7 @@ void menu();
 
 void delay()
 {
- for(long l=0;l<=9599999999;++l);
+ for(long l=0;l<=959999999;++l);
 }
 
 //////// function to create borders ////////
@@ -44,7 +44,7 @@ void box(int x, int y, int l, int b, char ch)
 }
 
 /* class defintion
-		for password management */
+					for password management */
 
 class pwd_mng
 {
@@ -162,6 +162,15 @@ void login()
 
 void start_prgm()
 {
+ box(0,0,80,26,'*');
+ char str[100]="Welcome to Hotel Pydrium";
+ gotoxy(24,12);
+ for(int i=0; str[i]!= '\0';++i)
+ {
+  cout<<str[i];
+  delay();
+ }
+ getch();
  clrscr();
  box(0,0,80,26,'*');
  pwd_mng P;
@@ -186,7 +195,7 @@ void start_prgm()
 
 
 /*class
-	defintion for customer details */
+		defintion for customer details */
 
 class guest
 {
@@ -371,11 +380,11 @@ void search()
  gotoxy(35,8);
  cout<<"Search with?\n";
  gotoxy(35,11);
- cout<<"1.ID number\n";
+ cout<<"1.ID number";
  gotoxy(35,13);
- cout<<"2.Room number\n";
+ cout<<"2.Room number";
  gotoxy(35,15);
- cout<<"3.Go back\n";
+ cout<<"3.Go back";
  char opt;
  gotoxy(48,19);
  cout<<"Enter the option _";
@@ -476,15 +485,39 @@ void search()
 	case '3':
 			 break;
 	case '4':
-			 break;
+				{
+				clrscr();
+				box(0,0,80,26,'*');
+				box(14,5,69,22,'+');
+				gotoxy(18,8);
+				int room;
+				cout<<"Enter the room number:";
+				cin>>room;
+				guest g;
+				ifstream fin;
+				fin.open("guest.dat",ios::in|ios::binary);
+				while(fin.read((char*)&g,sizeof(g)))
+				{
+				 if(room==g.getroomno())
+				 g.display();
+				}
+				fin.close();	
+                                gotoxy(40,4);
+				cout<<"BILL";
+				gotoxy(40,20);
+				cout<<"Press any key to print bill";
+				getch();
+				delay();
+				break;
+				}
 	case '5':{
-		  clrscr();
-		  box(0,0,80,26,'*');
-		  gotoxy(27,12);
-		  cout<<"Thank You for using the program!";
-		  exit(0);
-		  break;
-		}
+				  clrscr();
+				  box(0,0,80,26,'*');
+				  gotoxy(27,12);
+				  cout<<"Thank You for using the program!";
+				  exit(0);
+				  break;
+				}
 	default:clrscr();
 			 break;
   }
