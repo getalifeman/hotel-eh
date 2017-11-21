@@ -200,20 +200,31 @@ void start_prgm()
 class guest
 {
  char name[20],address[100];
+
  int room_no,id_no;
- float charges;
+
  float total_charge;
+
  long tel_no;
+
  char room_type;
+
  public:
 
- guest()
+ guest()             // constructor to initialise values
  {
-	charges=0.0;
-	total_charge=0.0;
+  total_charge=0.0;
  }
 
  void checkin(); //prototype for getting details function
+
+ void addspa_charge();              /* bunch of prototypes for
+																			 assigning charges */
+ void addgym_charge();
+
+ void addsnack_charge();
+
+ void addint_charge();
 
  //////// display details of customer ////////
 
@@ -250,13 +261,114 @@ class guest
  {
   return id_no;
  }
-
- void putcharges()
-{
- cout<<"Enter the total charge\n";       //include sum of all charges
- cin>>total_charge;
-}
 };
+
+void guest :: addspa_charge()
+{
+ cout<<"The rate is 10 BHD";
+ cout<<"Press any key to continue or backspace to go back";
+ char ch = getch();
+ if(ch==8)
+  return;
+ else
+  total_charge+=10;
+}
+
+void guest :: addgym_charge()
+{
+ cout<<"The rate is 5 BHD";
+ cout<<"Press any key to continue or backspace to go back";
+ char ch = getch();
+ if(ch==8)
+  return;
+ else
+  total_charge+=5;
+}
+
+void guest :: addsnack_charge()
+{
+  return;
+}
+
+void guest :: addint_charge()
+{
+ cout<<"The rate is 2 BHD";
+ cout<<"Press any key to continue or backspace to go back";
+ char ch = getch();
+ if(ch==8)
+  return;
+ else
+  total_charge+=2;
+}
+
+//////// function to call functions and assign relevant charges ////////
+
+void charges()
+{
+ now:
+ clrscr();
+ box(0,0,80,26,'*');
+ box(14,5,69,22,'+');
+ guest g;
+ gotoxy(30,8);
+ cout<<"Enter the room number:";
+ int room;
+ cin>>room;
+ clrscr();
+ box(0,0,80,26,'*');
+ box(14,5,69,22,'+');
+ ofstream file;
+ file.open("tempguest.dat",ios::app|ios::binary);
+ ifstream filein;
+ filein.open("guest.dat",ios::in|ios::binary);
+ while(filein.read((char*)&g,sizeof(g)))
+ {
+  if(room==g.getroomno())
+  {
+	gotoxy(16,7);
+	cout<<"1. Add spa charge";
+	gotoxy(16,9);
+	cout<<"2. Add gym charge";
+	gotoxy(16,11);
+	cout<<"3. Add snack charge";
+	gotoxy(16,13);
+	cout<<"4. Add WiFi usage charge";
+	gotoxy(45,19);
+	cout<<"Enter your option";
+	char opt=getch();
+	switch(opt)
+	{
+	 case '1' : g.addspa_charge();
+					file.write((char*)&g,sizeof(g));
+					break;
+	 case '2' : g.addgym_charge();
+					filein.seekg(-1*sizeof(g),ios::cur);
+					file.write((char*)&g,sizeof(g));
+					break;
+	 case '3' : g.addsnack_charge();
+					filein.seekg(-1*sizeof(g),ios::cur);
+					file.write((char*)&g,sizeof(g));
+					break;
+	 case '4' : g.addint_charge();
+					filein.seekg(-1*sizeof(g),ios::cur);
+					file.write((char*)&g,sizeof(g));
+					break;
+	 default  : clrscr();
+					box(0,0,80,26,'*');
+					box(14,5,69,22,'+');
+					gotoxy(30,12);
+					cout<<"Wrong choice... Try Again!";
+					delay();
+					goto now;
+	 }
+	}
+	file.write((char*)&g,sizeof(g));
+  }
+  file.close();
+  filein.close();
+  remove("guest.dat");
+  rename("tempguest.dat","guest.dat");
+ }
 
 //////// function for checking existing room numbers and id numbers ////////
 
@@ -328,12 +440,36 @@ void checkrooms()
   --s;
  }
  fin.close();
- gotoxy(29,5);
- cout<<e<<" economy rooms available\n";
- gotoxy(29,7);
- cout<<l<<" luxury rooms available\n";
- gotoxy(29,9);
- cout<<s<<" suites available\n";
+ if(e<0)
+ {
+	gotoxy(29,5);
+	cout<<"No economy rooms available";
+ }
+ else
+ {
+  gotoxy(29,5);
+  cout<<e<<" economy rooms available";
+ }
+ if(l<0)
+ {
+	gotoxy(29,7);
+	cout<<"No luxury rooms available";
+ }
+ else
+ {
+  gotoxy(29,7);
+  cout<<l<<" luxury rooms available\n";
+ }
+ if(s<0)
+ {
+	gotoxy(29,9);
+	cout<<"No suites available";
+ }
+ else
+ {
+  gotoxy(29,9);
+  cout<<s<<" suites available\n";
+ }
 }
 
 //////// function to add records ////////
@@ -482,7 +618,7 @@ void search()
 			 clrscr();
 			 break;
 			 }
-	case '3':
+	case '3': charges();
 			 break;
 	case '4':
 				{
@@ -501,9 +637,9 @@ void search()
 				 if(room==g.getroomno())
 				 g.display();
 				}
-				fin.close();	
-                                gotoxy(40,4);
+				gotoxy(40,4);
 				cout<<"BILL";
+				fin.close();
 				gotoxy(40,20);
 				cout<<"Press any key to print bill";
 				getch();
