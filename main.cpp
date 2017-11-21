@@ -342,15 +342,12 @@ void charges()
 					file.write((char*)&g,sizeof(g));
 					break;
 	 case '2' : g.addgym_charge();
-					filein.seekg(-1*sizeof(g),ios::cur);
-					file.write((char*)&g,sizeof(g));
+					file.write((char*)&g,sizeof(g));          // not sure if this will work on school compiler
 					break;
 	 case '3' : g.addsnack_charge();
-					filein.seekg(-1*sizeof(g),ios::cur);
 					file.write((char*)&g,sizeof(g));
 					break;
 	 case '4' : g.addint_charge();
-					filein.seekg(-1*sizeof(g),ios::cur);
 					file.write((char*)&g,sizeof(g));
 					break;
 	 default  : clrscr();
