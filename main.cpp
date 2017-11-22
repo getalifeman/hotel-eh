@@ -14,7 +14,7 @@ void menu();
 
 void delay()
 {
- for(long l=0;l<=959999999;++l);
+ for(long l=0;l<=9599999999;++l);
 }
 
 //////// function to create borders ////////
@@ -44,7 +44,7 @@ void box(int x, int y, int l, int b, char ch)
 }
 
 /* class defintion
-					for password management */
+	       for password management */
 
 class pwd_mng
 {
@@ -97,7 +97,9 @@ void pwd_mng :: create_acc()
   ch=getch();
   ++i;
   goto n;
- }
+}
+
+pwd[i]='\0';
 }
 
 ////////// function for login ////////////
@@ -106,11 +108,11 @@ void login()
 {
  again:
  clrscr();
- box(0,0,80,26,'*');
+ box(0,2,80,26,'*');
  char user[30], pass[30];
  pwd_mng p;
  ifstream fin;
- fin.open("pwd.dat",ios::in|ios::binary);
+ fin.open("pwd.dat",ios::binary);
  gotoxy(20,10);
  cout<<"Username:";
  gets(user);
@@ -139,16 +141,18 @@ void login()
  ++i;
  goto n;
 }
+pass[i]='\0'; //assigning null character at the end 
  while(fin.read((char*)&p,sizeof(p)))
  {
   if( strcmp(p.getuser(),user)==0 && strcmp(p.getpwd(),pass)==0 )
 	{
-	 gotoxy(38,30);
+	 gotoxy(38,20);
 	 cout<<"Access granted";
+	 delay();
 	 menu();
 	}
   else
-  {
+   {
 	gotoxy(38,20);
 	cout<<"Access revoked... Try again!";
 	delay();
@@ -162,40 +166,39 @@ void login()
 
 void start_prgm()
 {
- box(0,0,80,26,'*');
+ box(0,2,80,26,'*');
  char str[100]="Welcome to Hotel Pydrium";
  gotoxy(24,12);
  for(int i=0; str[i]!= '\0';++i)
  {
-  cout<<str[i];
-  delay();
+   cout<<str[i];
  }
  getch();
  clrscr();
- box(0,0,80,26,'*');
+ box(0,2,80,26,'*');
  pwd_mng P;
  ofstream fout;
  ifstream fin;
  fin.open("pwd.dat",ios::in|ios::binary);
- fout.open("temp.dat",ios::app|ios::binary);
+ fout.open("temp.dat",ios::out|ios::binary);
  if(!fin)
  {
-  P.create_acc();
-  fout.write((char*)&P,sizeof(P));
-  fout.close();
-  rename("temp.dat","pwd.dat");
-  exit(0);
+   P.create_acc();
+   fout.write((char*)&P,sizeof(P));
+   fout.close();
+   rename("temp.dat","pwd.dat");
+   exit(0);
  }
  else
  {
-  fin.close();
-  login();
+   fin.close();
+   login();
  }
 }
 
 
 /*class
-		defintion for customer details */
+       defintion for customer details */
 
 class guest
 {
@@ -230,42 +233,50 @@ class guest
 
  void display()
  {
-  clrscr();
-  box(0,0,80,26,'*');
-  box(14,5,69,22,'+');
-  gotoxy(15,7);
-  cout<<"ID number:"<<id_no;
-  gotoxy(15,9);
-  cout<<"Name:"<<name;
-  gotoxy(15,11);
-  cout<<"Address:"<<address;
-  gotoxy(15,13);
-  cout<<"Telephone number:"<<tel_no;
-  gotoxy(15,15);
-  cout<<"Room number:"<<room_no;
-  gotoxy(15,17);
-  cout<<"Total charge:"<<total_charge;
-  gotoxy(15,19);
-  cout<<"Room Type:"<<room_type<<endl;
+   clrscr();
+   box(0,2,80,26,'*');
+   box(14,5,69,22,'+');
+   gotoxy(15,7);
+   cout<<"ID number:"<<id_no;
+   gotoxy(15,9);
+   cout<<"Name:"<<name;
+   gotoxy(15,11);
+   cout<<"Address:"<<address;
+   gotoxy(15,13);
+   cout<<"Telephone number:"<<tel_no;
+   gotoxy(15,15);
+   cout<<"Room number:"<<room_no;
+   gotoxy(15,17);
+   cout<<"Total charge:"<<total_charge;
+   gotoxy(15,19);
+   cout<<"Room Type:"<<room_type<<endl;
  }
 
  int getroomno()
  {
-  return room_no;
+   return room_no;
  }
  char getroom_type()
  {
- return room_type;
+   return room_type;
  }
  int getidno()
  {
-  return id_no;
+   return id_no;
  }
 };
 
+//////// individual function declarations for assigning charges ////////
+
 void guest :: addspa_charge()
 {
+
+ clrscr();
+ box(0,2,80,26,'*');
+ box(14,5,69,22,'+');
+ gotoxy(16,7);
  cout<<"The rate is 10 BHD";
+ gotoxy(16,9);
  cout<<"Press any key to continue or backspace to go back";
  char ch = getch();
  if(ch==8)
@@ -276,7 +287,12 @@ void guest :: addspa_charge()
 
 void guest :: addgym_charge()
 {
+ clrscr();
+ box(0,2,80,26,'*');
+ box(14,5,69,22,'+');
+ gotoxy(16,7);
  cout<<"The rate is 5 BHD";
+ gotoxy(16,9);
  cout<<"Press any key to continue or backspace to go back";
  char ch = getch();
  if(ch==8)
@@ -285,14 +301,19 @@ void guest :: addgym_charge()
   total_charge+=5;
 }
 
-void guest :: addsnack_charge()
+void guest :: addsnack_charge()               // will add submenu later
 {
   return;
 }
 
 void guest :: addint_charge()
 {
+ clrscr();
+ box(0,2,80,26,'*');
+ box(14,5,69,22,'+');
+ gotoxy(16,7);
  cout<<"The rate is 2 BHD";
+ gotoxy(16,9);
  cout<<"Press any key to continue or backspace to go back";
  char ch = getch();
  if(ch==8)
@@ -305,26 +326,24 @@ void guest :: addint_charge()
 
 void charges()
 {
- now:
- clrscr();
- box(0,0,80,26,'*');
- box(14,5,69,22,'+');
- guest g;
- gotoxy(30,8);
- cout<<"Enter the room number:";
- int room;
- cin>>room;
- clrscr();
- box(0,0,80,26,'*');
- box(14,5,69,22,'+');
- ofstream file;
- file.open("tempguest.dat",ios::app|ios::binary);
- ifstream filein;
- filein.open("guest.dat",ios::in|ios::binary);
- while(filein.read((char*)&g,sizeof(g)))
- {
-  if(room==g.getroomno())
+  now:
+  clrscr();
+  box(0,2,80,26,'*');
+  box(14,5,69,22,'+');
+  guest g;
+  gotoxy(30,8);
+  cout<<"Enter the room number:";
+  int room;
+  cin>>room;
+  clrscr();
+  box(0,2,80,26,'*');
+  box(14,5,69,22,'+');
+  fstream file;
+  file.open("guest.dat",ios::out|ios::in|ios::binary);
+  while(file.read((char*)&g,sizeof(g)))
   {
+   if(room==g.getroomno())
+   {
 	gotoxy(16,7);
 	cout<<"1. Add spa charge";
 	gotoxy(16,9);
@@ -333,25 +352,33 @@ void charges()
 	cout<<"3. Add snack charge";
 	gotoxy(16,13);
 	cout<<"4. Add WiFi usage charge";
+	gotoxy(16,15);
+	cout<<"5. Go back";
 	gotoxy(45,19);
 	cout<<"Enter your option";
 	char opt=getch();
 	switch(opt)
 	{
-	 case '1' : g.addspa_charge();
+	  case '1' :                    file.seekp((-1)*sizeof(g),ios::cur);
+	 			        g.addspa_charge();
+	  	   			file.write((char*)&g,sizeof(g));
+					break;
+	  case '2' :                    file.seekp((-1)*sizeof(g),ios::cur);
+					g.addgym_charge();
 					file.write((char*)&g,sizeof(g));
 					break;
-	 case '2' : g.addgym_charge();
-					file.write((char*)&g,sizeof(g));          // not sure if this will work on school compiler
-					break;
-	 case '3' : g.addsnack_charge();
+          case '3' :                    file.seekp((-1)*sizeof(g),ios::cur);
+					g.addsnack_charge();
 					file.write((char*)&g,sizeof(g));
 					break;
-	 case '4' : g.addint_charge();
+	  case '4' :                    file.seekp((-1)*sizeof(g),ios::cur);
+					g.addint_charge();
 					file.write((char*)&g,sizeof(g));
 					break;
-	 default  : clrscr();
-					box(0,0,80,26,'*');
+	 case '5' :                     return;
+
+	 default  :                     clrscr();
+					box(0,2,80,26,'*');
 					box(14,5,69,22,'+');
 					gotoxy(30,12);
 					cout<<"Wrong choice... Try Again!";
@@ -359,25 +386,22 @@ void charges()
 					goto now;
 	 }
 	}
-	file.write((char*)&g,sizeof(g));
   }
   file.close();
-  filein.close();
-  remove("guest.dat");
-  rename("tempguest.dat","guest.dat");
+  goto now;
  }
 
 //////// function for checking existing room numbers and id numbers ////////
 
 void checkroidno(int r, int i)
 {
- guest g;
- ifstream fin;
- fin.open("guest.dat",ios::app|ios::binary);
- clrscr();
- while(fin.read((char*)&g,sizeof(g)))
- {
-  if(r==g.getroomno())
+  guest g;
+  ifstream fin;
+  fin.open("guest.dat",ios::app|ios::binary);
+  clrscr();
+  while(fin.read((char*)&g,sizeof(g)))
+  {
+   if(r==g.getroomno())
   {
 	cout<<"Room Occupied\n";
 	r1=1;
@@ -390,7 +414,7 @@ void checkroidno(int r, int i)
 	i1=1;
   }
  }
- fin.close();
+  fin.close();
 }
 
 //////// get details of customer ////////
@@ -398,65 +422,65 @@ void checkroidno(int r, int i)
 
  void guest :: checkin()
  {
-  gotoxy(12,3);
-  cout<<"Name of customer:";
-  gets(name);
-  gotoxy(12,5);
-  cout<<"Address of customer:";
-  gets(address);
-  gotoxy(12,7);
-  cout<<"Telephone number:";
-  cin>>tel_no;
-  gotoxy(12,9);
-  cout<<"Allocate room type as:";
-  cin>>room_type;
-  gotoxy(12,11);
-  cout<<"Assign room number as:";
-  cin>>room_no;
-  gotoxy(12,13);
-  cout<<"Assign ID number as:";
-  cin>>id_no;
-  checkroidno(room_no,id_no);
+   gotoxy(12,3);
+   cout<<"Name of customer:";
+   gets(name);
+   gotoxy(12,5);
+   cout<<"Address of customer:";
+   gets(address);
+   gotoxy(12,7);
+   cout<<"Telephone number:";
+   cin>>tel_no;
+   gotoxy(12,9);
+   cout<<"Allocate room type as:";
+   cin>>room_type;
+   gotoxy(12,11);
+   cout<<"Assign room number as:";
+   cin>>room_no;
+   gotoxy(12,13);
+   cout<<"Assign ID number as:";
+   cin>>id_no;
+   checkroidno(room_no,id_no);
  }
 
 //////// function to check number of specific rooms available ////////
 
 void checkrooms()
 {
- guest g;
- int e=10,l=10,s=10;
- ifstream fin;
- fin.open("guest.dat",ios::in|ios::binary);
- while(fin.read((char*)&g,sizeof(g)))
- {
-  if(g.getroom_type()=='e')
-  --e;
-  else if(g.getroom_type()=='l')
-  --l;
-  else
-  --s;
- }
- fin.close();
- if(e<0)
- {
-	gotoxy(29,5);
+  guest g;
+  int e=10,l=10,s=10;
+  ifstream fin;
+  fin.open("guest.dat",ios::in|ios::binary);
+  while(fin.read((char*)&g,sizeof(g)))
+  {
+    if(g.getroom_type()=='e')
+    --e;
+    else if(g.getroom_type()=='l')
+    --l;
+    else
+    --s;
+  }
+  fin.close();
+  if(e<0)
+  {
+   	gotoxy(29,5);
 	cout<<"No economy rooms available";
- }
- else
- {
-  gotoxy(29,5);
-  cout<<e<<" economy rooms available";
- }
- if(l<0)
- {
+  }
+  else
+  {
+        gotoxy(29,5);
+        cout<<e<<" economy rooms available";
+  }
+  if(l<0)
+  {
 	gotoxy(29,7);
 	cout<<"No luxury rooms available";
- }
- else
- {
-  gotoxy(29,7);
-  cout<<l<<" luxury rooms available\n";
- }
+  }
+  else
+  {
+        gotoxy(29,7);
+        cout<<l<<" luxury rooms available\n";
+  }
  if(s<0)
  {
 	gotoxy(29,9);
@@ -464,8 +488,8 @@ void checkrooms()
  }
  else
  {
-  gotoxy(29,9);
-  cout<<s<<" suites available\n";
+        gotoxy(29,9);
+        cout<<s<<" suites available\n";
  }
 }
 
@@ -473,7 +497,7 @@ void checkrooms()
 
 void append()
 {
- box(0,0,80,26,'*');
+ box(0,2,80,26,'*');
  checkrooms();
  gotoxy(10,11);
  cout<<"Book record?.. press any key to continue or backspace to go back";
@@ -493,7 +517,7 @@ void append()
   }
   else
 	{
-	 box(0,0,80,26,'*');
+	 box(0,2,80,26,'*');
 	 gotoxy(11,11);
 	 cout<<"Room number or ID number already assigned.. Try Again\n";
 	 delay();
@@ -508,7 +532,7 @@ void search()
 {
  next:
  clrscr();
- box(0,0,80,26,'*');
+ box(0,2,80,26,'*');
  box(14,5,69,22,'+');
  gotoxy(35,8);
  cout<<"Search with?\n";
@@ -528,7 +552,7 @@ void search()
  if(opt=='1')
  {
 	clrscr();
-	box(0,0,80,26,'*');
+	box(0,2,80,26,'*');
 	box(14,5,69,22,'+');
 	fin.open("guest.dat",ios::in|ios::binary);
 	int ino;
@@ -549,7 +573,7 @@ void search()
  else if(opt=='2')
  {
 	clrscr();
-	box(0,0,80,26,'*');
+	box(0,2,80,26,'*');
 	box(14,5,69,22,'+');
 	fin.open("guest.dat",ios::in|ios::binary);
 	int rno;
@@ -578,7 +602,7 @@ void search()
 {
  start:
  clrscr();
- box(0,0,80,26,'*');
+ box(0,2,80,26,'*');
  char opt;
  gotoxy(37,3);
  cout<<"MAIN MENU";
@@ -603,56 +627,51 @@ void search()
   opt=getch();
   switch(opt)
   {
-	case '1':
-			 {
-			 clrscr();
+	case '1':        clrscr();
 			 append();
 			 break;
-			 }
-	case '2':
-			 {
-			 search();
+			 
+	case '2':	 search();
 			 clrscr();
 			 break;
+		  
+	case '3':        charges();
+			 break;
+		  
+	case '4':	 clrscr();
+			 box(0,2,80,26,'*');
+			 box(14,5,69,22,'+');
+			 gotoxy(18,8);
+		         int room;
+			 cout<<"Enter the room number:";
+			 cin>>room;
+			 guest g;
+		         ifstream fin;
+			 fin.open("guest.dat",ios::in|ios::binary);
+			 while(fin.read((char*)&g,sizeof(g)))
+			 {
+			    if(room==g.getroomno())
+		  	    g.display();
 			 }
-	case '3': charges();
+			 gotoxy(40,4);
+			 cout<<"BILL";
+		         fin.close();
+			 gotoxy(40,20);
+			 cout<<"Press any key to print bill";
+			 getch();
+		         delay();
 			 break;
-	case '4':
-				{
-				clrscr();
-				box(0,0,80,26,'*');
-				box(14,5,69,22,'+');
-				gotoxy(18,8);
-				int room;
-				cout<<"Enter the room number:";
-				cin>>room;
-				guest g;
-				ifstream fin;
-				fin.open("guest.dat",ios::in|ios::binary);
-				while(fin.read((char*)&g,sizeof(g)))
-				{
-				 if(room==g.getroomno())
-				 g.display();
-				}
-				gotoxy(40,4);
-				cout<<"BILL";
-				fin.close();
-				gotoxy(40,20);
-				cout<<"Press any key to print bill";
-				getch();
-				delay();
-				break;
-				}
-	case '5':{
-				  clrscr();
-				  box(0,0,80,26,'*');
-				  gotoxy(27,12);
-				  cout<<"Thank You for using the program!";
-				  exit(0);
-				  break;
-				}
-	default:clrscr();
+			 
+	case '5':        clrscr();
+	                 box(0,2,80,26,'*');
+	   	         gotoxy(27,12);
+			 cout<<"Thank You for using the program!";
+			 exit(0);
+	 	         break;
+				
+	default:         clrscr();
 			 break;
+		  
   }
  goto start;
 }
